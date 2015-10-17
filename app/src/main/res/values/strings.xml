@@ -10,14 +10,17 @@
     <string name="preference_default_temp_key">Temperature Units</string>
     <string name="preference_default_temp_title">Temperature Units</string>
     <string name="preference_default_temp_summary">You need make a choice from units</string>
-    <string name="preference_default_temp_default">Metric</string>
+    <string name="preference_default_temp_default">metric</string>
+    <string name="preference_default_temp_metric">metric</string>
+    <string name="preference_default_temp_imperial">imperial</string>
+    <string name="preference_map">See me on a map</string>
     <string-array name="preference_list_temp_array">
         <item>Metric</item>
         <item>Imperial</item>
     </string-array>
     <string-array name="preference_list_temp_values">
-        <item>metric</item>
-        <item>imperial</item>
+        <item>@string/preference_default_temp_metric</item>
+        <item>@string/preference_default_temp_imperial</item>
     </string-array>
 
     

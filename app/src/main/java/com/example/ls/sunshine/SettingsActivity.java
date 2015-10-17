@@ -1,16 +1,23 @@
 package com.example.ls.sunshine;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
+
+import java.util.prefs.Preferences;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
- * <p>
+ * <p/>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
  * Android Design: Settings</a> for design guidelines and the <a
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
@@ -28,6 +35,26 @@ public class SettingsActivity extends PreferenceActivity
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_default_location_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_default_temp_key)));
+
+        Preference customPref = (Preference) findPreference(getString(R.string.preference_map));
+        customPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent();
+                String userLocation = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getString(R.string.preference_default_location_key), getString(R.string.preference_default_location_value));
+                Uri geoLocation = Uri.parse("geo:geo:0,0?q="+userLocation);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                    return true;
+                } else {
+                    Toast.makeText(SettingsActivity.this, "Fail to get location data", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        });
     }
 
     /**
@@ -35,6 +62,7 @@ public class SettingsActivity extends PreferenceActivity
      * Also fires the listener once, to initialize the summary (so it shows up before the value
      * is changed.)
      */
+
     private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(this);
@@ -65,5 +93,15 @@ public class SettingsActivity extends PreferenceActivity
         }
         return true;
     }
+    /*
+    * else if (preference.getKey().equals(getString(R.string.preference_map))){
+            Intent intent = new Intent();
+            Uri geoLocation = Uri.parse("geo:geo:0,0?q=Kharkiv");
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(geoLocation);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        }*/
 
 }

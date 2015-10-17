@@ -15,8 +15,11 @@
         android:defaultValue="@string/preference_default_temp_default"
         android:entries="@array/preference_list_temp_array"
         android:entryValues="@array/preference_list_temp_values">
-
     </ListPreference>
+     <Preference
+         android:key="@string/preference_map"
+         android:title="@string/preference_map">
+    </Preference >
 
 
 </PreferenceScreen>

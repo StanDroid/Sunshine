@@ -43,7 +43,7 @@ public class ForecastFragment extends Fragment {
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     private ArrayAdapter<String> mForecastArrayAdapter;
-    List<String> listWeatherData;
+
     public ForecastFragment() {
     }
 
@@ -73,18 +73,11 @@ public class ForecastFragment extends Fragment {
 
     public class FetchWeatherClass extends AsyncTask<String, Void, String[]> {
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String units = sharedPreferences.getString(getString(R.string.preference_default_temp_default),getString(R.string.preference_default_temp_default));
         String mode = "json";
-        //            String units = "metric";
-        String units ;
         int countDays = 7;
         String lang = "ru";
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            units = sharedPreferences.getString(getString(R.string.preference_default_temp_key),getString(R.string.preference_default_temp_default));
-        }
 
         @Override
         protected void onPostExecute(String[] strings) {
@@ -202,11 +195,18 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+            String unitPreference = sharedPreferences.getString(getString(R.string.preference_default_temp_key),getString(R.string.preference_default_temp_default));
+            if (unitPreference.equals(getString(R.string.preference_default_temp_imperial))){
+                high = (high*1.8)+32;
+                low = (low*1.8)+32;
+            } else if (!unitPreference.equals(getString(R.string.preference_default_temp_metric))){
+                Log.d(LOG_TAG,"Unit temp not found");
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
-            String highLowStr = roundedHigh + "/" + roundedLow;
-            return highLowStr;
+            return roundedHigh + "/" + roundedLow;
         }
 
         /**
@@ -275,16 +275,8 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
-                double high2 = high;
-                double low2 = low;
-                String highAndLow2;
-                if (!units.equals(getString(R.string.preference_default_temp_default))){
-                    high = (high*((double)9/5))+32;
-                    low= (low*((double)9/5))+32;
-                }
                 highAndLow = formatHighLows(high, low);
-                highAndLow2 = formatHighLows(high2, low2);
-                resultStrs[i] = "Day: " +day + "; " + description + "; Temp: " + highAndLow +"; original: "+ highAndLow2;
+                resultStrs[i] = "Day: " +day + "; " + description + "; Temp: " + highAndLow;
             }
             return resultStrs;
 
