@@ -38,6 +38,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ls.sunshine.MainActivity" />
         </activity>
+        <provider
+            android:name = ".data.WeatherProvider"
+            android:authorities="com.example.ls.sunshine">
+        </provider>
 
     </application>
 
