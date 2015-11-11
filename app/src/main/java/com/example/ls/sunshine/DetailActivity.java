@@ -16,30 +16,14 @@ package com.example.ls.sunshine;
  */
 
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ActionProvider;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import java.util.StringTokenizer;
 
 public class DetailActivity extends ActionBarActivity {
-
-    public final static String INTENT_EXTRA_FORECAST = "forecast";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +31,17 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailFragment())
+                    .add(R.id.weather_detail_container, new DetailFragment())
                     .commit();
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarDetail);
         setSupportActionBar(toolbar);
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail, menu);
-
         return true;
     }
 
@@ -70,69 +51,12 @@ public class DetailActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings_detail) {
-            startActivity(new Intent(this,SettingsActivity.class));
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class DetailFragment extends Fragment {
 
-
-        ShareActionProvider mShareActionProvider;
-        private static final String FORECAST_ACTION_SHARE_HASHTAG = "#SunShineApp";
-        private String mForecastStr;
-        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-
-
-        public DetailFragment() {
-            setHasOptionsMenu(true);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.textView);
-            Intent intent = getActivity().getIntent();
-            if (intent != null & intent.hasExtra(INTENT_EXTRA_FORECAST)){
-                mForecastStr = intent.getStringExtra(INTENT_EXTRA_FORECAST);
-                textView.setText(mForecastStr);
-            }
-            return rootView;
-        }
-
-        @Override
-        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-            inflater.inflate(R.menu.detail_fragment, menu);
-
-            // Locate MenuItem with ShareActionProvider
-            MenuItem item = menu.findItem(R.id.menu_item_share);
-
-            // Fetch and store ShareActionProvider
-            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-
-            if (mShareActionProvider != null){
-                mShareActionProvider.setShareIntent(createShareIntent());
-            }else {
-                Log.d(LOG_TAG,"Share Action Provider is null?");
-            }
-
-        }
-        private Intent createShareIntent(){
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT,mForecastStr+FORECAST_ACTION_SHARE_HASHTAG);
-            return intent;
-        }
-    }
 }
