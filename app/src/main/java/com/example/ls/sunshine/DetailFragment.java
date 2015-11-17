@@ -102,7 +102,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-        if (mForecast != null) {
+        if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
     }
@@ -159,11 +159,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         ((TextView) getView().findViewById(R.id.list_item_date_textview)).setText(Utility.formatDate(
                 data.getLong(COL_WEATHER_DATE)));
 
-        ((TextView) getView().findViewById(R.id.list_item_forecast_textview))
-                .setText(data.getString(COL_WEATHER_DESC));
+        TextView mDescriptionView = (TextView) getView().findViewById(R.id.list_item_forecast_textview);
 
-        ((ImageView) getView().findViewById(R.id.list_item_icon))
-                .setImageResource(Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID)));
+        String description = data.getString(COL_WEATHER_DESC);
+        mDescriptionView.setText(description );
+
+        ImageView mIconView = ((ImageView) getView().findViewById(R.id.list_item_icon));
+        mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(data.getInt(COL_WEATHER_CONDITION_ID)));
+        // For accessibility, add a content description to the icon field
+        mIconView.setContentDescription(description);
+
 
         boolean isMetric = Utility.isMetric(getActivity());
 
