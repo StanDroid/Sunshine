@@ -35,10 +35,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             @Override
             public void onClick(View view) {
                 onUpdateLocation(Utility.getPreferredLocation(getApplicationContext()));
-                Toast.makeText(getApplicationContext(),"Updating location data",Toast.LENGTH_SHORT).show();
-                Snackbar.make(view, "Hey! What do you want to see here?", Snackbar.LENGTH_LONG)
+/*                Snackbar.make(view, "Hey! What do you want to see here?", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-            }
+*/            }
         });
 
         if (findViewById(R.id.weather_detail_container) != null) {

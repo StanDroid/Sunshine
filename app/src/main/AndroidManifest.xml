@@ -13,16 +13,17 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/ForecastTheme">
+            android:theme="@style/ForecastTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ls.sunshine.MainActivity" />
@@ -30,16 +31,20 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_settings_activity"
-            android:theme="@style/SettingsTheme"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/SettingsTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ls.sunshine.MainActivity" />
         </activity>
+
         <provider
-            android:name = ".data.WeatherProvider"
-            android:authorities="com.example.ls.sunshine">
+            android:name=".data.WeatherProvider"
+            android:authorities="com.example.ls.sunshine" >
         </provider>
+        <service android:name=".service.SunshineService"/>
+
+        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
 
     </application>
 
