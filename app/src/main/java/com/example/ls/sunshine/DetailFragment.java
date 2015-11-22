@@ -102,7 +102,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-        if (mShareActionProvider != null) {
+        if (mForecast != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
     }
@@ -170,15 +170,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mIconView.setContentDescription(description);
 
 
-        boolean isMetric = Utility.isMetric(getActivity());
-
         ((TextView) getView().findViewById(R.id.list_item_high_textview))
                 .setText(Utility.formatTemperature(getContext(),
-                        data.getDouble(COL_WEATHER_MAX_TEMP), isMetric));
+                        data.getDouble(COL_WEATHER_MAX_TEMP)));
 
         ((TextView) getView().findViewById(R.id.list_item_low_textview))
                 .setText(Utility.formatTemperature(getContext(),
-                        data.getDouble(COL_WEATHER_MIN_TEMP), isMetric));
+                        data.getDouble(COL_WEATHER_MIN_TEMP)));
 
         ((TextView) getView().findViewById(R.id.list_item_wind))
                 .setText(Utility.getFormattedWind(getContext(), data.getFloat(COL_WEATHER_WIND),
@@ -192,6 +190,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 .setText(Utility.getFormattedPressure(getContext(),
                         data.getDouble(COL_WEATHER_PRESSURE)));
 
+        long date = data.getLong(COL_WEATHER_DATE);
+        double high = data.getDouble(COL_WEATHER_MAX_TEMP);
+        double low = data.getDouble(COL_WEATHER_MIN_TEMP);
+        String dateText = Utility.getFormattedMonthDay(getActivity(), date);
+        String suffix = "\u00B0";
+        mForecast = String.format("%s - %s - %s/%s", dateText, description, ((int)high) + suffix , (int)low)+ suffix ;
 
         // If onCreateOptionsMenu has already happened, we need to update the share intent now.
         if (mShareActionProvider != null) {

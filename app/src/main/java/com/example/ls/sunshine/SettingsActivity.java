@@ -39,24 +39,6 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_default_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_default_temp_key)));
 
-        Preference customPref = (Preference) findPreference(getString(R.string.preference_map));
-        customPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent();
-                String userLocation = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getString(R.string.preference_default_location_key), getString(R.string.preference_default_location_value));
-                Uri geoLocation = Uri.parse("geo:geo:0,0?q="+userLocation);
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setData(geoLocation);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                    return true;
-                } else {
-                    Toast.makeText(SettingsActivity.this, "Fail to get location data", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-        });
     }
 
     /**
@@ -95,16 +77,7 @@ public class SettingsActivity extends PreferenceActivity
         }
         return true;
     }
-    /*
-    * else if (preference.getKey().equals(getString(R.string.preference_map))){
-            Intent intent = new Intent();
-            Uri geoLocation = Uri.parse("geo:geo:0,0?q=Kharkiv");
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setData(geoLocation);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            }
-        }*/
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Intent getParentActivityIntent() {

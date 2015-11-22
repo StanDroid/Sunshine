@@ -12,11 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.ls.sunshine.sync.SunshineSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private String mLocation;
     public static final String FORECASTFRAGMENT_TAG = "FORECASTFRAGMENT_TAG";
     public static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    private String userName;
 
     private boolean mTwoPane;
 
@@ -25,19 +29,19 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-        mLocation = Utility.getPreferredLocation(this);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onUpdateLocation(Utility.getPreferredLocation(getApplicationContext()));
-/*                Snackbar.make(view, "Hey! What do you want to see here?", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-*/            }
+                userName = Utility.getUsername(MainActivity.this);
+                String toastNotification;
+                toastNotification = "You are checking updates for weather";
+                if (!userName.equals(null)){
+                    toastNotification = userName + ", " + toastNotification;
+                }
+                Toast.makeText(MainActivity.this, toastNotification, Toast.LENGTH_SHORT).show();
+///                onUpdateLocation(Utility.getPreferredLocation(getApplicationContext()));
+            }
         });
 
         if (findViewById(R.id.weather_detail_container) != null) {
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override

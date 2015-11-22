@@ -9,5 +9,8 @@
         android:orderInCategory="1">
 
     </item>
+    <item android:id="@+id/action_map"
+        android:title="@string/preference_map"
+        app:showAsAction="never" />
 
 </menu>

@@ -4,6 +4,8 @@ package com.example.ls.sunshine;
  * Created by LS on 27.10.2015.
  */
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +16,8 @@ import com.example.ls.sunshine.R;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Utility {
     public static String getPreferredLocation(Context context) {
@@ -29,17 +33,16 @@ public class Utility {
                 .equals(context.getString(R.string.preference_default_temp_metric));
     }
 
-    static String formatTemperature(Context context,double temperature, boolean isMetric) {
-        double temp;
-        if (temperature==-0){
-            temperature = 0;
+    public static String formatTemperature(Context context,double temperature) {
+        String suffix = "\u00B0";
+        String iconFormatTemp = "C";
+
+        if (!isMetric(context)) {
+            temperature = (temperature * 1.8) + 32;
+            iconFormatTemp = "F";
         }
-        if ( !isMetric ) {
-            temp = 9*temperature/5+32;
-        } else {
-            temp = temperature;
-        }
-        return context.getString(R.string.format_temperature,temp);
+
+        return String.format(context.getString(R.string.format_temperature), temperature) + iconFormatTemp ;
     }
 
     static String formatDate(long dateInMillis) {
@@ -130,9 +133,8 @@ public class Utility {
         Time time = new Time();
         time.setToNow();
         SimpleDateFormat dbDateFormat = new SimpleDateFormat(Utility.DATE_FORMAT);
-        SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMMM dd");
-        String monthDayString = monthDayFormat.format(dateInMillis);
-        return monthDayString;
+        SimpleDateFormat monthDayFormat = new SimpleDateFormat("dd MMMM");
+        return monthDayFormat.format(dateInMillis);
     }
 
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
@@ -245,6 +247,25 @@ public class Utility {
             return R.drawable.art_clouds;
         }
         return -1;
+    }
+
+    public static String getUsername(Context context) {
+        AccountManager manager = AccountManager.get(context);
+        Account[] accounts = manager.getAccountsByType("com.google");
+        List<String> possibleEmails = new LinkedList<>();
+
+        for (Account account : accounts) {
+            possibleEmails.add(account.name);
+        }
+
+        if (!possibleEmails.isEmpty() && possibleEmails.get(0) != null) {
+            String email = possibleEmails.get(0);
+            String[] parts = email.split("@");
+
+            if (parts.length > 1)
+                return parts[0];
+        }
+        return null;
     }
 
 }
